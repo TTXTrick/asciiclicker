@@ -10,6 +10,10 @@
 #include "audio.h"
 #include "platform.h"
 #include "upng.h"
+// networking (you already added these files in the repo)
+#include "net_client.h"
+extern NetClient* net; // defined somewhere globally (e.g. main or a startup file)
+
 
 extern Game* game;
 extern Terrain* terrain;
