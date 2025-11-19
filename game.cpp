@@ -17,6 +17,40 @@
 #include "lexer.h"
 
 #include "mainmenu.h"
+// ---- network helpers (paste after includes in game.cpp) ----
+#include <stdio.h>
+#include "net_client.h"   // or whatever header defines NetClient*
+
+extern NetClient* net;   // must point to your WS network instance; ensure it's defined in main/startup
+
+// Simple parser for "PLAYER id x y z" messages and dispatcher
+static void HandleNetworkMessage(const char* msg)
+{
+    // message format examples:
+    // PLAYER <id> <x> <y> <z>
+    // You can extend this for chat, spawn, leave etc.
+
+    if (!msg) return;
+
+    if (strncmp(msg, "PLAYER ", 7) == 0)
+    {
+        int id = -1;
+        float x=0,y=0,z=0;
+        if (sscanf(msg+7, "%d %f %f %f", &id, &x, &y, &z) == 4)
+        {
+            // you will need to map id -> Character* (remote player). 
+            // Implement GetOrCreateRemotePlayer(id) that returns a Character* to update.
+            Character* remote = /* GetOrCreateRemotePlayer(id) */ nullptr;
+            if (remote)
+            {
+                remote->x = x;  // replace with correct member names; see Character definition
+                remote->y = y;
+                remote->z = z;
+            }
+        }
+    }
+}
+
 
 uint8_t ConvertToCP437(uint32_t uc)
 {
