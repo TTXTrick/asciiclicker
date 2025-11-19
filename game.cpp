@@ -50,6 +50,28 @@ static void HandleNetworkMessage(const char* msg)
         }
     }
 }
+static void Network_PollOnce()
+{
+    if (!net) return;
+    if (!net->online) return;
+
+    // pump incoming messages: you already have onMessage callback in net_ws; 
+    // if not, poll from a queue inside net implementation. This is generic:
+    // if net->onMessage exists, it's probably been set where net is created.
+    // But a simple fallback: if net->onMessage is not used, add a blocking/non-blocking read
+    // function to your net implementation and call it here.
+
+    // Example: if net exposes a method `popMessage()` -> string (not standard),
+    // call it here. Otherwise rely on net->onMessage callback to call HandleNetworkMessage.
+
+    // If your net uses callback:
+    // nothing to do here (callback already handles messages as they arrive).
+
+    // If you need to process queued messages, do it here (pseudocode):
+    // string msg;
+    // while(net->popMessage(msg)) { HandleNetworkMessage(msg.c_str()); }
+}
+
 
 
 uint8_t ConvertToCP437(uint32_t uc)
